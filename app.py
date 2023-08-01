@@ -5,6 +5,8 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings("ignore")
 import streamlit as st
 
 # Function to preprocess the text
@@ -39,13 +41,11 @@ def perform_lda(bow_matrix, num_topics):
 # Extract the most relevant words for each topic
 def extract_topic_keywords(lda, vectorizer, num_words=5):
     topic_keywords = []
-    feature_names = vectorizer.get_feature_names()  # Use get_feature_names() instead
     for topic_idx, topic in enumerate(lda.components_):
         top_words_idx = topic.argsort()[-num_words:][::-1]
-        top_words = [feature_names[i] for i in top_words_idx]
+        top_words = [vectorizer.get_feature_names_out()[i] for i in top_words_idx]
         topic_keywords.append(top_words)
     return topic_keywords
-
 
 # Generate theme names based on topic keywords
 def generate_theme_names(topic_keywords):
@@ -62,8 +62,8 @@ def draw_pie_chart(theme_names):
     plt.pie(theme_counts, labels=theme_names, autopct="%1.1f%%", startangle=140)
     plt.axis("equal")
     plt.title("Theme Distribution")
-    plt.show()
-    st.pyplot()
+    # plt.show()  # Remove this line, as st.pyplot() will handle the rendering.
+    st.pyplot(plt.gcf())
 
 # Function to draw bar chart
 def draw_bar_chart(theme_names):
@@ -74,8 +74,8 @@ def draw_bar_chart(theme_names):
     plt.ylabel("Frequency")
     plt.title("Theme Frequency")
     plt.xticks(rotation=45)
-    plt.show()
-    st.pyplot()
+    # plt.show()  # Remove this line, as st.pyplot() will handle the rendering.
+    st.pyplot(plt.gcf())
 
 # Main function
 def main():
@@ -111,4 +111,5 @@ def main():
         draw_bar_chart(theme_names)
 
 if __name__ == "__main__":
-    main()
+     st.set_option('deprecation.showPyplotGlobalUse', False)  # Disable the warning for the entire script
+     main()
