@@ -43,9 +43,10 @@ def extract_topic_keywords(lda, vectorizer, num_words=5):
     topic_keywords = []
     for topic_idx, topic in enumerate(lda.components_):
         top_words_idx = topic.argsort()[-num_words:][::-1]
-        top_words = [vectorizer.get_feature_names_out()[i] for i in top_words_idx]
+        top_words = [vectorizer.get_feature_names()[i] for i in top_words_idx]
         topic_keywords.append(top_words)
     return topic_keywords
+
 
 # Generate theme names based on topic keywords
 def generate_theme_names(topic_keywords):
