@@ -17,13 +17,22 @@ def preprocess_text(text):
     return " ".join(filtered_words)
 
 # Read sentences from CSV or plain text file
-def read_sentences(uploaded_file):
+'''def read_sentences(uploaded_file):
     if uploaded_file.name.endswith(".csv"):
         df = pd.read_csv(uploaded_file)
         # Replace 'your_column_name' with the actual column name in your CSV file.
         sentences = df['challenges'].tolist()  # Replace 'your_column_name'
     else:
         sentences = uploaded_file.getvalue().decode('utf-8').splitlines()
+    return sentences'''
+# Read sentences from CSV or plain text file
+def read_sentences(file_path):
+    if file_path.endswith(".csv"):
+        df = pd.read_csv(file_path, header=None)
+        sentences = df.iloc[:, 0].tolist()
+    else:
+        with open(file_path, "r") as file:
+            sentences = file.readlines()
     return sentences
 
 # Bag-of-words vectorization
@@ -80,7 +89,7 @@ def draw_bar_chart(theme_names):
 
 # Main function
 def main():
-    st.title("Text Analytics: Theme Analysis of College Challenges")
+    st.title("Theme Generator")
 
     nltk.download("punkt")
     nltk.download("stopwords")
